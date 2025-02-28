@@ -3,10 +3,10 @@ def antoine( a, T):
     #
     # Uses Antoine's equation to obtain the vapor pressure of a substance given
     # the coefficients of the equation:
-    #  Ps = a1 - a2/(a3+T)
+    #  Ps = A - B/(C+T)
     #
     # INPUTS:
-    #  a - the antoine coefficients with coeffients in columns and species in
+    #  A,B,C - the antoine coefficients with coeffients in columns and species in
     #      rows. Coefficients from NIST expect units of bar and K.
     #  T - the temperature at which the vapor pressure is evaluated (K)
     #  tempUnit - OPTIONAL the unit of temperature used
