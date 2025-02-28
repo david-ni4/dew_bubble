@@ -1,0 +1,34 @@
+# Constants
+P = 1.01325  # Pressure in bar
+Tguess = 350 # K
+
+# Get Antoine coefficients for propane and toluene (assumes functions exist)
+propane = get_antoine_coefficient('propane',Tguess)
+toluene = get_antoine_coefficient('toluene',Tguess)
+
+antoineCoefs = np.array( [propane[0:3], toluene[0:3]] )
+
+# Define the liquid mole fraction range for propane with higher resolution
+T_soln = []
+x_prop = np.linspace(0,1)
+y_prop = []
+
+for z_prop in x_prop:
+    z = [z_prop,1-z_prop]       # Liquid composition for propane
+    def resfun(T):              # Define the residual function for the bubble point calculation
+        return 1-np.sum(raoult_law_kvalue(T,P,antoineCoefs)*z)
+
+    T = fsolve(resfun,Tguess)    # Solve for the bubble point temperature
+    Tguess = T
+    T_soln.append(T)               # Calculate vapor phase composition using Raoult's law
+    K = raoult_law_kvalue(T,P,antoineCoefs)
+    y = K*z
+    y_prop.append(y[0])
+
+# Plotting the results
+plt.plot(y_prop,T_soln,label='Y_prop') #added " label='Y_prop' "
+plt.plot(x_prop,T_soln,label='X_prop') #added " label=X_prop"
+plt.xlabel('$x_{prop}$, $y_{prop}$')
+plt.ylabel('Temperature (K)')
+plt.title('T-x-y of propane and toluene')
+plt.legend(loc="upper right") #added legend
